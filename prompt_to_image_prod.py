@@ -12,7 +12,7 @@ def preload_model_prompt_to_image():
     login(token="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")
     dtype = torch.bfloat16
 
-    bfl_repo = "black-forest-labs/FLUX.1-schnell"
+    bfl_repo = "models"
     revision = "refs/pr/1"
 
     scheduler = FlowMatchEulerDiscreteScheduler.from_pretrained(

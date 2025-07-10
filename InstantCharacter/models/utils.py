@@ -136,4 +136,3 @@ def flux_load_lora(self, lora_file, lora_weight=1.0):
         dtype = cur_attr.weight.data.dtype
         d_w = torch.einsum(einsum_str, up_w.to(torch.float32), down_w.to(torch.float32)).to(dtype)
         cur_attr.weight.data = cur_attr.weight.data + d_w * lora_scale * lora_weight
-

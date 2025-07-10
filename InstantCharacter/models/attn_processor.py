@@ -161,4 +161,3 @@ class FluxIPAttnProcessor(nn.Module):
         ip_hidden_states = ip_hidden_states.to(img_query.dtype)
         ip_hidden_states = attn.batch_to_head_dim(ip_hidden_states)
         return ip_hidden_states
-

@@ -8,7 +8,7 @@ from improved_safety_prod import preload_model_safety, generate_safety
 from InstantCharacter.instant_prod import generate_image_to_image, preload_model_image_to_image
 from prompt_to_image_prod import generate_images_from_prompts, preload_model_prompt_to_image
 
-app = FastAPI()
+app = FastAPI(swagger_ui_parameters={"syntaxHighlight": False})
 
 # --- Модели: загружаем при старте ---
 @app.on_event("startup")
@@ -60,4 +60,4 @@ async def image_safety_endpoint(file: UploadFile = File(...)):
     return {"status": result}
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", port=8000, reload=True)

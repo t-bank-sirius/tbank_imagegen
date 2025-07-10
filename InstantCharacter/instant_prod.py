@@ -3,7 +3,8 @@ from PIL import Image
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import StreamingResponse
 from InstantCharacter.pipeline import InstantCharacterFluxPipeline
-
+from huggingface_hub import login
+login(token="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")
 import io
 pipe = None
 
@@ -16,9 +17,9 @@ def preload_model_image_to_image():
     from InstantCharacter.pipeline import InstantCharacterFluxPipeline
 
     ip_adapter_path = 'checkpoints/instantcharacter_ip-adapter.bin'
-    base_model = 'black-forest-labs/FLUX.1-dev'
-    image_encoder_path = 'google/siglip-so400m-patch14-384'
-    image_encoder_2_path = 'facebook/dinov2-giant'
+    base_model = '/workspaces/nikbauer34/tbank_imagegen/models'
+    image_encoder_path = '/workspaces/nikbauer34/tbank_imagegen/InstantCharacter/google'
+    image_encoder_2_path = '/workspaces/nikbauer34/tbank_imagegen/InstantCharacter/facebook'
 
     pipe = InstantCharacterFluxPipeline.from_pretrained(
         base_model,

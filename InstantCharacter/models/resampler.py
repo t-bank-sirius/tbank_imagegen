@@ -362,4 +362,3 @@ class CrossLayerCrossScaleProjector(nn.Module):
 
         hidden_states, timestep_emb = self.resampler(hidden_states, timesteps, need_temb=True)
         return hidden_states, timestep_emb
-

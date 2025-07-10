@@ -43,4 +43,3 @@ class RMSNorm(nn.Module):
             return self.scale * x_normed + self.offset
 
         return self.scale * x_normed
-

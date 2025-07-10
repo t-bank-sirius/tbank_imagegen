@@ -2,7 +2,8 @@ import torch
 from PIL import Image
 from transformers import AutoProcessor, LlavaForConditionalGeneration
 import sys
-
+from huggingface_hub import login
+login(token="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")
 PROMPT_IMAGE_INTEGRITY = """
 Task: Analyze an image to identify potential copyright concerns, depictions of public figures, or the presence of inappropriate, dangerous, or offensive content.
 
@@ -53,7 +54,7 @@ if __name__ == "__main__":
     filename = sys.argv[1]
 
     # инициализация модели один раз
-    model_id = "llava-hf/llava-interleave-qwen-7b-hf"
+    model_id = "llava-hf/llava-interleave-qwen-0.5b-hf"
     model = LlavaForConditionalGeneration.from_pretrained(
         model_id,
         torch_dtype=torch.float16,
