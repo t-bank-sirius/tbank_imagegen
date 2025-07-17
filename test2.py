@@ -1,0 +1,2 @@
+from huggingface_hub import hf_hub_download
+hf_hub_download(repo_id="tencent/InstantCharacter", filename="instantcharacter_ip-adapter.bin", local_dir="/workspaces/nikbauer34/tbank_imagegen/checkpoints")

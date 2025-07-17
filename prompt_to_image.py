@@ -10,7 +10,7 @@ from transformers import CLIPTextModel, CLIPTokenizer, T5EncoderModel, T5Tokeniz
 login(token="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")
 dtype = torch.bfloat16
 
-bfl_repo = "black-forest-labs/FLUX.1-schnell"
+bfl_repo = "black-forest-labs/FLUX.1-dev"
 revision = "refs/pr/1"
 
 scheduler = FlowMatchEulerDiscreteScheduler.from_pretrained(

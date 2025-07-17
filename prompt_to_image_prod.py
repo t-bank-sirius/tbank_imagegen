@@ -5,24 +5,25 @@ from diffusers import FlowMatchEulerDiscreteScheduler, AutoencoderKL
 from diffusers.models.transformers.transformer_flux import FluxTransformer2DModel
 from diffusers.pipelines.flux.pipeline_flux import FluxPipeline
 from transformers import CLIPTextModel, CLIPTokenizer, T5EncoderModel, T5TokenizerFast
+from InstantCharacter.style_prompt import get_prompt
 pipe = None  # Глобальная переменная пайплайна
 
 def preload_model_prompt_to_image():
     global pipe
-    login(token="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")
+    # login(token="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")
     dtype = torch.bfloat16
 
-    bfl_repo = "models"
+    bfl_repo = "/workspaces/nikbauer34/tbank_imagegen/models/flux"
     revision = "refs/pr/1"
 
     scheduler = FlowMatchEulerDiscreteScheduler.from_pretrained(
         bfl_repo, subfolder="scheduler", revision=revision
     )
     text_encoder = CLIPTextModel.from_pretrained(
-        "openai/clip-vit-large-patch14", torch_dtype=dtype
+        "/workspaces/nikbauer34/tbank_imagegen/models/openai", torch_dtype=dtype
     )
     tokenizer = CLIPTokenizer.from_pretrained(
-        "openai/clip-vit-large-patch14"
+        "/workspaces/nikbauer34/tbank_imagegen/models/openai"
     )
     text_encoder_2 = T5EncoderModel.from_pretrained(
         bfl_repo, subfolder="text_encoder_2", torch_dtype=dtype, revision=revision
@@ -60,7 +61,7 @@ def preload_model_prompt_to_image():
 
 def generate_images_from_prompts(prompts):
     """
-    prompts: список строк (текстовых промптов)
+    prompts: список строк {prompt: text, style_key: text}
     Возвращает: список PIL.Image той же длины
     """
     global pipe
@@ -70,7 +71,7 @@ def generate_images_from_prompts(prompts):
     images = []
     for prompt in prompts:
         image = pipe(
-            prompt=prompt,
+            prompt=get_prompt(prompt.prompt, prompt.style_key),
             width=1024,
             height=1024,
             num_inference_steps=4,

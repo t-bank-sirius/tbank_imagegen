@@ -1,0 +1,53 @@
+def get_prompt(prompt: str, style: str):
+    needed = {
+        "2D FairyTale": f"{prompt},2D, human perspective effect, modern minimalist illustration style, minimal lines, almost no shadows, using color blocks to express the sense of volume and space,",
+        "3D FairyTale": f"{prompt} 3D fairy tale scene, whimsical and magical atmosphere, lush forests, glowing lights, enchanted creatures, charming cottages, vibrant colors, intricate details, soft lighting, dreamy and imaginative, cinematic perspective",
+        "2D Futuristic Cyberpunk": f"2D, Cyberpunk Fantasy {prompt} Cyberpunk, often for dystopian future, hackers, or neon aesthetics.",
+        "3D Futuristic Scify": f"{prompt}. 3D, Design as a massive futuristic mechanical, designed with sleek metallic surfaces. The scene is cinematic, with dramatic soft lighting and atmospheric fog. The camera is set at a low angle, with shallow depth of field. Ultra-detailed, hyperrealistic lighting and reflections. Wide-angle composition, sci-fi mood.",
+        "3D Soft Dreamy": f"{prompt}. 2D Soft Dreamy. The colors are bright yet soft, with a pastel-like palette. The scene has realistic textures with playful objects looking puffy like cotton, have fluffy fur, and the grass has gentle shading. The interior is minimalist, enhancing the feeling of openness and wonder, with a gentle glow from ambient light.",
+        "2D Soft Dreamy": f"{prompt}. 2D Soft Dreamy. The image has a soft, pastel color palette with bright yet gentle tones. All objects appear puffy, like cotton, some with fluffy fur textures. The grass is shaded softly, giving a gentle, dreamy look. The interior is minimalist, enhancing a sense of openness and wonder, and there's a subtle, glowing ambient light throughout the scene. The overall vibe is playful, soothing, and light.",
+        "3D Hyperrealistic": f"{prompt} 3d hyperrealistic",
+        "2D Hyperrealistic": f"{prompt} 2d hyperrealistic",
+        "2D Game Art": f"2D Game Art {prompt}, 2D Game Art, often for platformers, pixel art, or side-scrolling games.",
+        "3D Game Art": f"3D Game Art {prompt}, 3D Game Art, often for platformers, pixel art, or side-scrolling games.",
+        "3D Cartoon": f"3D Illustration for Children's Cartoons {prompt}, Creating 3D illustrations for children's cartoons, often colorful and imaginative to engage young audience." ,
+        "2D Cartoon": f"2D Illustration for Children's Cartoons {prompt}, Creating 2D illustrations for children's cartoons, often colorful and imaginative to engage young audience." ,
+        "2D Anime": f"{prompt}. 2D anime , vibrant and expressive. Clean, bold line art, large expressive eyes, dynamic poses, soft cel shading, bright and colorful palette, simplified backgrounds.",
+        "3D Anime": f"{prompt}. 3D anime style, detailed yet stylized characters, smooth skin, big eyes, cel-shaded textures, vibrant colors, soft lighting, dynamic posing, anime-inspired environments.",
+        # "3D Vintage Poster": f"Vintage freakshow poster 3D {prompt} Gaffed spectacles, anatomical anomalies, grotesque performers, come one come all",
+        # "2D Vintage Poster": f"Vintage freakshow poster 2D {prompt} Gaffed spectacles, anatomical anomalies, grotesque performers, come one come all",
+        # "3D WaterColor": f"3D Watercolor painting {prompt} . vibrant, beautiful, painterly, detailed, textural, artistic",
+        # "2D WaterColor": f"2D Watercolor painting {prompt} . vibrant, beautiful, painterly, detailed, textural, artistic",
+        # "2D Abstract": f"{prompt}. 2D abstract, bold shapes and colors, experimental forms, non-representational, creative compositions, high contrast.",
+        # "3D Abstract": f"{prompt}. 3D abstract, unusual forms, surreal shapes, flowing geometry, vibrant lighting, rich color gradients, visually striking.",
+        # "2D Illustration": f"{prompt}. 2D illustration, hand-drawn lines, artistic textures, creative compositions, diverse palettes, storytelling elements.",
+        # "3D Pixel Art": f"{prompt}. 3D pixel art, blocky shapes, pixelated textures, retro game vibe, vibrant yet limited palette, playful style.",
+        # "2D Sketch": f"{prompt}. 2D sketch, loose expressive lines, pencil or ink texture, visible construction shapes, monochrome or subtle colors.",
+        # "3D Sketch": f"{prompt}. 3D sketch, loose expressive lines, pencil or ink texture, visible construction shapes, monochrome or subtle colors.",
+        # "2D Surrealism": f"2D psychedelic style {prompt}. vibrant colors, swirling patterns, abstract forms, surreal, trippy",
+        # "2D Ink Drawing": f"{prompt}. 2D ink drawing, strong black lines, cross-hatching, high contrast, detailed textures, traditional pen art style.",
+        # "3D Ceramic": f" 3D Ceramic Design  {prompt}, Ceramic Design, often for ceramic art, pottery design, or clay works.",
+        # "2D Minimalist": f"{prompt}. 2D minimalist, ultra-simplified forms, limited color palette, flat areas, lots of negative space, elegant and modern feeling.",
+        # "2D Minimalist": f"{prompt}. 2D minimalist, ultra-simplified forms, limited color palette, flat areas, lots of negative space, elegant and modern feeling.",
+        # "3D Minimalist": f"{prompt}. 3D minimalist, ultra-simplified forms, limited color palette, flat areas, lots of negative space, elegant and modern feeling.",
+        # "3D Photorealistic": f"{prompt}. 3D photorealistic, highly detailed models, realistic lighting, natural textures, true-to-life colors, lifelike composition.",
+        # "2D Photorealistic": f"{prompt}. 2D photorealistic, highly detailed models, realistic lighting, natural textures, true-to-life colors, lifelike composition.",
+        # "2D Doodle": f"{prompt}. 2D doodle art, playful spontaneous lines, hand-drawn feel, sketchy details, fun quirky elements, informal style.",
+        # "3D Doodle": f"{prompt}. 3D doodle art, playful spontaneous lines, hand-drawn feel, sketchy details, fun quirky elements, informal style.",
+        "3D Cartoonish Horror": f"{prompt}. 3D cartoonish horror, exaggerated spooky characters, vibrant eerie lighting, playful yet creepy details, Halloween feel.",
+        "2D Cartoonish Horror": f"{prompt}. 2D cartoonish horror, exaggerated spooky characters, vibrant eerie lighting, playful yet creepy details, Halloween feel.",
+        # "2D Graffiti": f"{prompt}. 2D graffiti art, bold spray paint textures, urban vibe, lively colors, dynamic compositions, street art style.",
+        # "3D Metallic": f"{prompt}. 3D metallic style, reflective chrome surfaces, hard edges, futuristic look, cool tones, dramatic highlights.",
+        # "2D Children’s Book": f"{prompt}. 2D children's book illustration, soft friendly lines, gentle textures, happy scenes, pastel palette, storybook charm.",
+        # "3D Monochrome": f"{prompt}. 3D monochrome, single color scheme, varied shades for depth, high contrast lighting, moody and artistic appearance.",
+        # "2D Stained Glass": f"{prompt}. 2D stained glass, bold outlines, vibrant segmented colors, glowing effects, intricate patterns, classic art nouveau vibes.",
+        # "3D Sculpture": f"{prompt}. 3D sculpture style, stone or metal look, real-life proportions, shadows and highlights accentuating the shapes, gallery lighting.",
+        # "2D Pixel Line": f"{prompt}. 2D pixel art with clear outlines, boxy shapes, retro feel, distinct grid arrangement, limited color count.",
+        # "3D Vaporwave": f"{prompt}. 3D vaporwave, neon pastel colors, retro-futuristic elements, grid landscapes, surreal lighting, 1980s aesthetics.",
+        # "2D Magazine Editorial": f"{prompt}. 2D magazine editorial, sharp design, creative layouts, fashion-forward, bold typography, stylish color splashes."
+        "3D Avatar Generation": f"${prompt} A cute 3D character portrait in Pixar Disney style, soft lighting, big expressive eyes, friendly smile, pastel colors, upper body shot, studio background, highly detailed, smooth skin, vibrant and appealing look — perfect for an avatar"
+    }
+    if style not in needed.keys():
+      return prompt
+    else:
+      return needed[style]

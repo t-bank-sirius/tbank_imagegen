@@ -8,9 +8,9 @@ from diffusers.pipelines.pipeline_utils import is_accelerate_available, is_accel
 from diffusers.pipelines.flux.pipeline_flux import *
 from transformers import SiglipVisionModel, SiglipImageProcessor, AutoModel, AutoImageProcessor
 
-from InstantCharacter.models.attn_processor import FluxIPAttnProcessor
-from InstantCharacter.models.resampler import CrossLayerCrossScaleProjector
-from InstantCharacter.models.utils import flux_load_lora
+from models.attn_processor import FluxIPAttnProcessor
+from models.resampler import CrossLayerCrossScaleProjector
+from models.utils import flux_load_lora
 
 
 # TODO
@@ -154,7 +154,32 @@ class InstantCharacterFluxPipeline(FluxPipeline):
         print(f"=> load project: {key_name}")
         self.subject_image_proj_model = image_proj_model
 
+    @torch.inference_mode()
+    def unload_adapter(self):
+    # Обнуляем и удаляем из конфига через прямое присваивание
+        if hasattr(self, "siglip_image_encoder") and getattr(self, "siglip_image_encoder", None) is not None:
+            self.siglip_image_encoder = None
+            if hasattr(self, "config") and hasattr(self.config, "siglip_image_encoder"):
+                self.config.siglip_image_encoder = None
 
+        if hasattr(self, "siglip_image_processor") and getattr(self, "siglip_image_processor", None) is not None:
+            self.siglip_image_processor = None
+            if hasattr(self, "config") and hasattr(self.config, "siglip_image_processor"):
+                self.config.siglip_image_processor = None
+
+        if hasattr(self, "dino_image_encoder_2") and getattr(self, "dino_image_encoder_2", None) is not None:
+            self.dino_image_encoder_2 = None
+            if hasattr(self, "config") and hasattr(self.config, "dino_image_encoder_2"):
+                self.config.dino_image_encoder_2 = None
+
+        if hasattr(self, "dino_image_processor_2") and getattr(self, "dino_image_processor_2", None) is not None:
+            self.dino_image_processor_2 = None
+            if hasattr(self, "config") and hasattr(self.config, "dino_image_processor_2"):
+                self.config.dino_image_processor_2 = None
+
+        import torch
+        torch.cuda.empty_cache()
+        print("✅ IP-Adapter(ы) выгружены.")
     @torch.inference_mode()
     def init_adapter(
         self, 

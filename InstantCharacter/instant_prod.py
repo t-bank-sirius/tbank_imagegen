@@ -4,7 +4,8 @@ from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import StreamingResponse
 from InstantCharacter.pipeline import InstantCharacterFluxPipeline
 from huggingface_hub import login
-login(token="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")
+from InstantCharacter.style_prompt import get_prompt
+# login(token="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")
 import io
 pipe = None
 
@@ -15,11 +16,10 @@ def preload_model_image_to_image():
     global pipe
     import torch
     from InstantCharacter.pipeline import InstantCharacterFluxPipeline
-
-    ip_adapter_path = 'checkpoints/instantcharacter_ip-adapter.bin'
-    base_model = '/workspaces/nikbauer34/tbank_imagegen/models'
-    image_encoder_path = '/workspaces/nikbauer34/tbank_imagegen/InstantCharacter/google'
-    image_encoder_2_path = '/workspaces/nikbauer34/tbank_imagegen/InstantCharacter/facebook'
+    ip_adapter_path = '/workspaces/nikbauer34/tbank_imagegen/models/checkpoint/instantcharacter_ip-adapter.bin'
+    base_model = '/workspaces/nikbauer34/tbank_imagegen/models/flux'
+    image_encoder_path = '/workspaces/nikbauer34/tbank_imagegen/models/google'
+    image_encoder_2_path = '/workspaces/nikbauer34/tbank_imagegen/models/facebook'
 
     pipe = InstantCharacterFluxPipeline.from_pretrained(
         base_model,
@@ -48,8 +48,9 @@ def generate_image_to_image(image_prompt_list, seed=123456):
     for image_prompt in image_prompt_list:
         input_image = image_prompt['image']
         input_prompt = image_prompt['prompt']
+        input_style = image_prompt['style_key']
         output_image = pipe(
-            prompt=input_prompt,
+            prompt=get_prompt(input_prompt, input_style),
             num_inference_steps=28,
             guidance_scale=3.5,
             subject_image=input_image,
