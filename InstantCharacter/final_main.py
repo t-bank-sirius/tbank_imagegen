@@ -7,7 +7,7 @@ from PIL import Image
 import io
 import time
 
-from final import load_models, text_to_image, image_to_image
+from final import load_models, text_to_image, image_to_image, create_avatar, images_merge
 from improved_safety_prod import preload_model_safety, generate_safety
 
 app = FastAPI()
@@ -16,19 +16,27 @@ app = FastAPI()
 def pil_to_base64(img: Image.Image) -> str:
     buffered = io.BytesIO()
     img.save(buffered, format="PNG")
-    return base64.b64encode(buffered.getvalue()).decode()
+    return "data:image/png;base64," + base64.b64encode(buffered.getvalue()).decode()
 
 def base64_to_pil(data: str) -> Image.Image:
     needed = data
+    print('needed')
+    print(needed)
     if needed.startswith('data:image'):
         needed = needed.split(',', 1)[1]
-    print(data)
+    # print(data)
     return Image.open(io.BytesIO(base64.b64decode(needed)))
 
 # --- Pydantic модели ---
 class PromptInput(BaseModel):
     prompt: str
     style_key: str
+class AvatarInput(BaseModel):
+    prompt: str
+class MergeInput(BaseModel):
+    images: list[str]
+    prompt: str
+
 
 
 class ImagePromptInput(BaseModel):
@@ -52,7 +60,8 @@ def load_model():
 def generate_from_text(request: PromptInput):
     start = time.time()
     
-    print(request)
+    # print(request)
+    # print("processing")
     # Ваши generate_images_from_prompts ждёт список объектоnв с .prompt и .style_key атрибутами
     images = text_to_image(request.prompt, request.style_key)
     # if (generate_safety([images]) == "bad"):
@@ -67,6 +76,29 @@ def safety(request: SafetyInput):
         if (data == "bad"):
             print('yfyyyyv')
             raise HTTPException(status_code=404, detail="Bad image")
+@app.post("/create_avatar")
+def create_avatar_1(request: AvatarInput):
+    start = time.time()
+    st = request.prompt
+    print('st')
+    print(st)
+    data = create_avatar(st)
+    fin = time.time()
+    return {"image": pil_to_base64(data), "time": fin - start}
+@app.post("/images_merge")
+def images_merge_1(request: MergeInput):
+    # print(request)
+    start = time.time()
+    ims = []
+    for el in request.images:
+        ims.append(base64_to_pil(el))
+        # print(ims)
+    print('final_main')
+    print(ims)
+    print(request.prompt)
+    data = images_merge(ims, request.prompt)
+    fin = time.time()
+    return {"image": pil_to_base64(data), "time": fin - start}
 @app.post("/generate_from_image_text")
 def generate_from_image_text(request: ImagePromptInput):
     start = time.time()

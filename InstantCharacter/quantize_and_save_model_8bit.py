@@ -4,11 +4,11 @@ from transformers import BitsAndBytesConfig as TransformersBitsAndBytesConfig
 import torch
 from diffusers import AutoModel
 from transformers import T5EncoderModel
-from InstantCharacter.pipeline import InstantCharacterFluxPipeline
+from pipeline import InstantCharacterFluxPipeline
 
-quant_config = TransformersBitsAndBytesConfig(load_in_4bit=True,)
+quant_config = TransformersBitsAndBytesConfig(load_in_8bit=True,)
 path = "/workspaces/nikbauer34/tbank_imagegen/models/flux"
-save_path = "/workspaces/nikbauer34/tbank_imagegen/models/flux-4bit"
+save_path = "/workspaces/nikbauer34/tbank_imagegen/models/flux-8bit"
 
 text_encoder_2_4bit = T5EncoderModel.from_pretrained(
     path,
@@ -19,7 +19,7 @@ text_encoder_2_4bit = T5EncoderModel.from_pretrained(
 print("Text Encoder Loaded")
 
 
-quant_config = DiffusersBitsAndBytesConfig(load_in_4bit=True,)
+quant_config = DiffusersBitsAndBytesConfig(load_in_8bit=True,)
 transformer_4bit = AutoModel.from_pretrained(
     path,
     subfolder="transformer",
