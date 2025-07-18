@@ -7,7 +7,7 @@ from PIL import Image
 import io
 import time
 
-from final import load_models, text_to_image, image_to_image, create_avatar, images_merge, safety_checker
+from final import load_models, text_to_image, image_to_image, create_avatar, images_merge, safety_checker, sketch_to_image
 from improved_safety_prod import preload_model_safety, generate_safety
 
 app = FastAPI()
@@ -36,6 +36,9 @@ class AvatarInput(BaseModel):
 class MergeInput(BaseModel):
     images: list[str]
     prompt: str
+class SketchInput(BaseModel):
+    prompt: str
+    image: str
 
 
 
@@ -67,15 +70,11 @@ def generate_from_text(request: PromptInput):
     # if (generate_safety([images]) == "bad"):
     #     raise HTTPException(status_code=404, detail="")
     images_base64 = pil_to_base64(images)
+    if safety_checker(images_base64) == "bad":
+        return HTTPException(detail="Bad image")
     fin = time.time()
     return {"image": "data:image/jpeg;base64," +images_base64, "time": fin - start}
-@app.post("/safety")
-def safety(request: SafetyInput):
-        data = safety_checker(request.image)
-        return {"data": data}
-        if (data == "bad"):
-            print('yfyyyyv')
-            raise HTTPException(status_code=404, detail="Bad image")
+
 @app.post("/create_avatar")
 def create_avatar_1(request: AvatarInput):
     start = time.time()
@@ -83,6 +82,12 @@ def create_avatar_1(request: AvatarInput):
     print('st')
     print(st)
     data = create_avatar(st)
+    fin = time.time()
+    return {"image": pil_to_base64(data), "time": fin - start}
+@app.post("/sketch_to_image")
+def sketch_to_image1(request: SketchInput):
+    start = time.time()
+    data = sketch_to_image(base64_to_pil(request.image), request.prompt)
     fin = time.time()
     return {"image": pil_to_base64(data), "time": fin - start}
 @app.post("/images_merge")

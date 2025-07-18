@@ -98,9 +98,22 @@ def concatenate_images(images, direction="horizontal"):
     
     return concatenated
 def safety_checker(image: str):
-    r = requests.post("http://0.0.0.0:8001/analyze", {"image_base64": image, "comment": ""})
-    print("r")
-    print(r)
+    r = requests.post("http://localhost:8002/analyze", {"image_base64": image, "comment": ""})
+    if r.content.result == "This image contains potentially unsafe or inappropriate content and cannot be analyzed due to safety restrictions.":
+        return "bad"
+    else:
+        return "good"
+def sketch_to_image(image: Image, prompt: str):
+    new_image = pipe(
+        prompt=prompt + " Create a colorful, friendly, high-quality illustration based on this child's sketch.", 
+        num_inference_steps=16,
+        guidance_scale=3.5,
+        subject_scale=0.9,
+        height=512,
+        width=512,
+        subject_image=image
+    ).images[0]
+    return new_image
 def create_avatar(prompt: str):
     print("prompt")
     print(prompt)
@@ -160,7 +173,7 @@ def text_to_image(prompt: str, style_key: str):
 def image_to_image(prompt: str, style_key: str, image: Image):
     new_image = pipe(
         prompt=get_prompt(prompt, style_key), 
-        num_inference_steps=18,
+        num_inference_steps=16,
         guidance_scale=3.5,
         subject_scale=0.9,
         subject_image=image,
