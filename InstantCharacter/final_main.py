@@ -7,7 +7,7 @@ from PIL import Image
 import io
 import time
 
-from final import load_models, text_to_image, image_to_image, create_avatar, images_merge
+from final import load_models, text_to_image, image_to_image, create_avatar, images_merge, safety_checker
 from improved_safety_prod import preload_model_safety, generate_safety
 
 app = FastAPI()
@@ -71,7 +71,7 @@ def generate_from_text(request: PromptInput):
     return {"image": "data:image/jpeg;base64," +images_base64, "time": fin - start}
 @app.post("/safety")
 def safety(request: SafetyInput):
-        data = generate_safety([base64_to_pil(request.image)])
+        data = safety_checker(request.image)
         return {"data": data}
         if (data == "bad"):
             print('yfyyyyv')

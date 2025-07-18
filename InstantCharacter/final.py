@@ -2,6 +2,7 @@ import torch
 from PIL import Image
 from pipeline import InstantCharacterFluxPipeline
 from style_prompt import get_prompt
+import requests
 pipe = None
 def load_models():
     global pipe
@@ -96,6 +97,10 @@ def concatenate_images(images, direction="horizontal"):
             y_offset += img.height
     
     return concatenated
+def safety_checker(image: str):
+    r = requests.post("http://0.0.0.0:8001/analyze", {"image_base64": image, "comment": ""})
+    print("r")
+    print(r)
 def create_avatar(prompt: str):
     print("prompt")
     print(prompt)
