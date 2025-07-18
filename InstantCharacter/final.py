@@ -100,13 +100,13 @@ def create_avatar(prompt: str):
     print("prompt")
     print(prompt)
     new_image = pipe(
-        prompt="Based on this avatar image, make a simialar one with this prompt: " + prompt + " A cute 3D character portrait in Pixar Disney style, soft lighting, big expressive eyes, friendly smile, pastel colors, upper body shot, studio background, highly detailed, smooth skin, vibrant and appealing look — perfect for an avatar", 
-        num_inference_steps=9,
+        prompt=prompt + " A cute 3D character portrait in Pixar Disney style, soft lighting, big expressive eyes, friendly smile, pastel colors, upper body shot, studio background, highly detailed, smooth skin, vibrant and appealing look — perfect for an avatar", 
+        num_inference_steps=8,
         guidance_scale=3.5,
         subject_scale=0.9,
         height=256,
         width=256,
-        subject_image=Image.open("/workspaces/tbank_imagegen/InstantCharacter/jhv.jpg").convert('RGB')
+        subject_image=Image.open("/workspaces/tbank_imagegen/InstantCharacter/assets/100.jpg").convert('RGB')
     ).images[0]
     return new_image
 def images_merge(images: list[str], prompt: str):
