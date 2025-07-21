@@ -172,7 +172,7 @@ def create_avatar(prompt: str):
     with torch.inference_mode():
         avatar_image = pipe(
             prompt=f"{prompt} A cute 3D character portrait in Pixar Disney style, soft lighting, big expressive eyes, friendly smile, pastel colors, upper body shot, studio background", 
-            num_inference_steps=4,  # Уменьшено с 8 до 4
+            num_inference_steps=9,  # Уменьшено с 8 до 4
             guidance_scale=3.5,
             subject_scale=0.9,
             height=256,
@@ -218,7 +218,7 @@ def text_to_image(prompt: str, style_key: str):
     with torch.inference_mode():
         result_image = pipe(
             prompt=get_prompt(prompt, style_key), 
-            num_inference_steps=4,  # Уменьшено с 9 до 4
+            num_inference_steps=9,  # Уменьшено с 9 до 4
             guidance_scale=3.5,
             subject_scale=0.9,
             height=512,
@@ -232,7 +232,7 @@ def image_to_image(prompt: str, style_key: str, image: Image):
     with torch.inference_mode():
         result_image = pipe(
             prompt=get_prompt(prompt, style_key), 
-            num_inference_steps=6,  # Уменьшено с 18 до 6
+            num_inference_steps=15,  # Уменьшено с 18 до 6
             guidance_scale=3.5,
             subject_scale=0.9,
             subject_image=image,
