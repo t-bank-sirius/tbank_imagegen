@@ -2,7 +2,7 @@ import uvicorn
 import asyncio
 import functools
 from concurrent.futures import ThreadPoolExecutor
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import base64
@@ -40,7 +40,7 @@ app.add_middleware(
 
 # Thread pool для параллельной обработки
 executor = ThreadPoolExecutor(max_workers=2)
-
+global_lock = asyncio.Lock()
 # ---- Оптимизированные утилиты для конвертации ----
 def pil_to_base64_fast(img: Image.Image, format: str = "JPEG", quality: int = 85) -> str:
     """Быстрая конвертация PIL в base64 с оптимизацией"""
@@ -125,6 +125,17 @@ async def startup_event():
     
     print("✅ Сервер готов к работе!")
 
+
+
+# Мидлвар, чтобы поймать любой запрос
+@app.middleware("http")
+async def one_request_at_a_time(request: Request, call_next):
+    # Если лок свободен, занимаем его; если занят — возвращаем ошибку
+    if global_lock.locked():
+        raise HTTPException(status_code=429, detail="Server busy: only one request at a time is allowed.")
+    async with global_lock:
+        response = await call_next(request)
+    return response
 # --- Оптимизированные Endpoints ---
 
 @app.post("/generate_from_text")

@@ -19,10 +19,10 @@ def load_models_optimized():
     torch.set_float32_matmul_precision("medium")  # Или "high" для лучшего качества
     
     # Пути к моделям
-    ip_adapter_path = '/workspaces/tbank_imagegen/models/checkpoint/instantcharacter_ip-adapter.bin'
-    base_model = "/workspaces/tbank_imagegen/models/flux-8bit"
-    image_encoder_path = '/workspaces/tbank_imagegen/models/google'
-    image_encoder_2_path = '/workspaces/tbank_imagegen/models/facebook'
+    ip_adapter_path = '/workspaces/nikbauer34/tbank_imagegen/models/checkpoint/instantcharacter_ip-adapter.bin'
+    base_model = "/workspaces/nikbauer34/tbank_imagegen/models/flux-8bit"
+    image_encoder_path = '/workspaces/nikbauer34/tbank_imagegen/models/google'
+    image_encoder_2_path = '/workspaces/nikbauer34/tbank_imagegen/models/facebook'
     
     # Загружаем модель с fp16 для производительности
     pipe = InstantCharacterFluxPipeline.from_pretrained(
@@ -99,7 +99,7 @@ def load_models_optimized():
 def warmup_image(pipe):
     """Прогрев модели для первого быстрого inference"""
     try:
-        warmup_image = Image.open("/workspaces/tbank_imagegen/InstantCharacter/assets/100.jpg").convert('RGB')
+        warmup_image = Image.open("/workspaces/nikbauer34/tbank_imagegen/InstantCharacter/assets/100.jpg").convert('RGB')
         
         # Делаем несколько тестовых inference для прогрева
         with torch.inference_mode():
@@ -177,7 +177,7 @@ def create_avatar(prompt: str):
             subject_scale=0.9,
             height=256,
             width=256,
-            subject_image=Image.open("/workspaces/tbank_imagegen/InstantCharacter/assets/100.jpg").convert('RGB')
+            subject_image=Image.open("/workspaces/nikbauer34/tbank_imagegen/InstantCharacter/assets/100.jpg").convert('RGB')
         ).images[0]
     return avatar_image
 
@@ -223,7 +223,7 @@ def text_to_image(prompt: str, style_key: str):
             subject_scale=0.9,
             height=512,
             width=512,
-            subject_image=Image.open("/workspaces/tbank_imagegen/InstantCharacter/assets/100.jpg").convert('RGB')
+            subject_image=Image.open("/workspaces/nikbauer34/tbank_imagegen/InstantCharacter/assets/100.jpg").convert('RGB')
         ).images[0]
     return result_image
 
