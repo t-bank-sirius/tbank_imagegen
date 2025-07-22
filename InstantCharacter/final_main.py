@@ -186,6 +186,8 @@ async def sketch(request: SketchInput):
     try:
         # Конвертируем base64 в PIL
         input_image = base64_to_pil_fast(request.image)
+        if safety_checker(input_image) == "bad":
+            return HTTPException(status_code=403, detail="Картинка содержит что-то опасное/неподобающее")
         
         # Генерируем изображение
         loop = asyncio.get_event_loop()
@@ -244,7 +246,7 @@ async def generate_from_image_text_optimized(request: ImagePromptInput):
         # Конвертируем base64 в PIL
         input_image = base64_to_pil_fast(request.image)
         if safety_checker(input_image) == "bad":
-            returhn HTTPException(status_code=403, detail="Картинка содержит что-то опасное/неподобающее")
+            return HTTPException(status_code=403, detail="Картинка содержит что-то опасное/неподобающее")
         
         # Генерируем изображение
         loop = asyncio.get_event_loop()
