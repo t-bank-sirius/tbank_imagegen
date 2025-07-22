@@ -160,10 +160,15 @@ def concatenate_images(images, direction="horizontal"):
 def safety_checker(image: str):
     """Быстрая проверка безопасности через внешний API"""
     try:
-        r = requests.post("http://0.0.0.0:8001/analyze", 
-                         {"image_base64": image, "comment": ""}, 
+        r = requests.post("http://localhost:8002/safety", 
+                         {"image_base64": image}, 
                          timeout=2)  # Быстрый timeout
-        return r.json()
+        data = r.json()
+        result: str = data.get("result")
+        if result.lower().startswith("safe"):
+            return "good"
+        else:
+            return "bad"
     except:
         return "good"  # При ошибке считаем безопасным
 
