@@ -217,8 +217,8 @@ def text_to_image(prompt: str, style_key: str):
     """Оптимизированная генерация из текста"""
     with torch.inference_mode():
         result_image = pipe(
-            prompt=get_prompt(prompt, style_key), 
-            num_inference_steps=9,  # Уменьшено с 9 до 4
+            prompt="don't look at the image, just generate: " + get_prompt(prompt, style_key), 
+            num_inference_steps=13,  # Уменьшено с 9 до 4
             guidance_scale=3.5,
             subject_scale=0.9,
             height=512,
@@ -228,11 +228,12 @@ def text_to_image(prompt: str, style_key: str):
     return result_image
 
 def image_to_image(prompt: str, style_key: str, image: Image):
+    print(image)
     """Оптимизированная генерация из изображения"""
     with torch.inference_mode():
         result_image = pipe(
             prompt=get_prompt(prompt, style_key), 
-            num_inference_steps=15,  # Уменьшено с 18 до 6
+            num_inference_steps=20,  # Уменьшено с 18 до 6
             guidance_scale=3.5,
             subject_scale=0.9,
             subject_image=image,
